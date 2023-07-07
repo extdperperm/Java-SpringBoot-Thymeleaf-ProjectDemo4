@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Spring Boot Project Demo 4 - Jdbc</title>
+<link rel="stylesheet" href="./styles/index.css">
+</head>
+<body>
+    <div class="cabecera">
+        <div class="cab1"></div>
+        <div class="cap2"></div>
+    </div>
+    <div class="cuerpo">
+        <div class="panel1">
+            <div class="nota"><div class="notacab1"><p>Proyecto</p></div>
+                              <div class="notabody"><p style="text-align: center;"><span>#Spring Boot Project Demo 4</span></p>
+                            </div>
+            </div>
+            <div class="nota"><div class="notacab1"><p>Objetivos</p></div>
+                              <div class="notabody"><p class="objetivos">- <b>C</b>onfiguración de JDBC.</p>
+                              						<p class="objetivos">- <b>C</b>reación de una capa de conexión.</p>   
+                              						<p class="objetivos">- <b>C</b>reación de una capa de datos (DAO).</p>
+                              						<p class="objetivos">- <b>C</b>onocer la operativa básica con la base de datos.</p> 
+                            </div>
+            </div>
+            <div class="nota"><div class="notacab2"><p>Entorno de Desarrollo</p></div>
+                              <div class="notabody"><p><span>Ide:</span> Sprint Tool Suite, versión: 4</p>
+                                                    <p><span>Servidor de referencia:</span> Apache Tomcat, versión: 10</p>
+                                                    <p><span>Jdk:</span> OpenJdk, versión: 17.1</p>
+                                                    <p><span>Base de datos:</span> MySql o MariaDb, versión 8</p>
+                            </div>
+            </div>
+            <div class="nota"><div class="notacab2"><p>Estandar de Desarrollo</p></div>
+                              <div class="notabody"><p><span>Gestor de proyecto:</span> Maven, versión: 4</p>
+                            </div>
+            </div> 
+            <div class="nota"><div class="notacab2"><p>Dependencias</p></div>
+                              <div class="notabody"><p><span>Spring Boot Framework:</span> Spring, versión 3.1.*. Módulos: spring-boot-starter-web, spring-boot-starter-tomcat, tomcat-embed-jasper, tomcat-embed-jasper, mysql-connector-java (v. 8.0.33)</p>
+                            </div>
+            </div>    
+            <div class="nota"><div class="notacab2"><p>Documentación y Sitios de Interés</p></div>
+                              <div class="notabody"><p><a href="https://mvnrepository.com/" target="_blank"><b>Ir a</b></a> Maven Repository (para localizar dependencias)</p>
+                                                    <p><a href="https://docs.spring.io/spring-framework/docs/current/reference/html/" target="_blank"><b>Leer</b></a> Documentación de Spring Framework</p>
+                                                    <p><a href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/"target="_blank"><b>Leer</b></a> Documentación de Spring Boot</p>
+                                                    <p><a href="https://proitcsolution.com.ve/inyeccion-de-dependencias-spring/" target="_blank"><b>Leer</b></a> Inyección de dependencias con Spring</p>
+                                                    <p><a href="https://www.mysqltutorial.org/mysql-jdbc-tutorial/" target="_blank"><b>Leer</b></a> Tutorial MySql - Jdbc</p>
+                            </div>
+            </div>         
+        </div>
+        <div class="panel2">
+			<div class="item"><p style="text-align: center;"><span style="font-size: 30px;">Arquitectura en Cuatro Capas</span></p>
+							  <p style="text-align: center;"><img style="width: 821px; height: 249px;" src="./img/diagrama1.jpg" alt="Arquitectura en 4 capas"/></p>
+							  <p>Una de las arquitecturas de aplicaciones más extendida es la de cuatro capas. El <b>M</b>odelo <b>V</b>ista <b>C</b>ontrolador, ya garantiza la separación de los esfuerzos entre el diseño de las vistas (front-end) y el código de servidor (back-end).</p>
+							  <p>Sin embargo, no es suficiente con esta separación. Es recomendable que la capa de negocio, donde se implementa las controladoras y los modelos, sean independientes a la complejidad que supone el acceso a datos (BBDD, WebServices o API Rest). Dicho en otras palabras, no es recomendable, que las controladoras gestionen dicha complejidad de forma directa.</p>
+                              <p>Hoy día, predominan las aplicaciones cuya fuente de datos es numerosa y diversa. Por ello, la presencia de una capa de datos, cuyo objetivo es garantizar el acceso y suministro de datos a la capa de negocio de forma homogenea, facilita que las aplicaciones sean más escalables en el futuro y los costes de modificar las conecciones de los diversos origenes de datos sea más asumible.</p>
+							  <p>En este proyecto, tiene una muestra (entre otras alternativas) de como podemos realizar la separación en 4 capas.</p>			  
+            </div>
+            <div class="item"><p style="text-align: center;"><span>¿Cómo puedo configurar el proyecto para conectarme con JDBC?</span></p>	
+            				  <p><b>1º</b>- Añade en el <em>pom.xml</em> la dependencia del <em>jdbc</em> correspondiente a la base de datos. En este proyecto es la dependencia <em>mysql-connector-java</em>.</p>
+							  <p><b>2º</b>- Capa de Conexión <em>(es.dsw.connections)</em>: En este proyecto se ha decidido configurar la conexión, creando la clase <em>MySqlConnection</em>. Todas las conexiones pasarán por dicha clase. Si se requiriera conectarse a otro nuevo origen de datos, se crearía otra clase diferente.</p>
+							  <p><b>3º</b>- Capa de Datos <em>(es.dsw.daos)</em>: En este proyecto se ha decidido implementar el concepto de DAO (Data Access Object). Este patrón de diseño, considerará las tablas de base de datos como entidades de las cuales se obtendrá por cada registro un objeto. Por ello, cada modelo cuyos atributos estén relacionados con la base de datos, debería implementar su DAO. En los métodos de los daos, se explotará los objetos de la clase conexión <em>MySqlConnection</em>.</p>
+							  <p><b>4º</b>- Capa de Negocio <em>(es.dsw.controller, es.dsw.models)</em>: Finalmente, desde el nivel de negocio se interactua con los DAO's para obtener los objetos que en cada momento se necesitan.</p>		  
+            </div>
+            <div class="item" th:if="${FlagError}"><p style="text-align: center;"><span style="color: red;">ERROR DE ACCESO A DATOS</span></p>	
+            				  <p style="font-weight: bold;text-align: center;" th:text="${MsgError}"></p>		 
+            				  <p style="text-align: center;">Por favor, revise los datos de conexión o la disponibilidad de la base de datos para poder ejecutar estos ejemplos.</p> 
+            </div>
+            <div class="item"><p><span>Ejemplo 1 - Consulta de datos:</span> Al hacer click en este ejemplo se realiza una consulta SQL a base de datos. Observe como se ha divido los diferentes niveles de complejidad: Configuración del jdbc (capa de conexión), Obtención y acomodación de los datos en un DAO (capa de datos), controladoras y modelos (capa de negocio) y vistas .jsp (capa de interfaz).<a href="./ejemplo1">Ver Ejemplo</a></p>			  
+            </div>
+            <div class="item"><p><span>Ejemplo 2 - Consulta de datos:</span> Al hacer click en este ejemplo se realiza una consulta SQL a base de datos. En este caso es interesante que observe como el DAO de Articulo cumple las relaciones del diagrama de clase; cada objeto articulo incorpora su relación con el tipo de artículo.<a href="./ejemplo2">Ver Ejemplo</a></p>			  
+            </div>
+            <div class="item"><p><span>Ejemplo 3 - Modificación de datos:</span>Se realiza un insert de los datos de un artículo indicado. Observe como sigue siendo el DAO el que gestiona y hace de intermediario entre la controladora y la capa de conexión.</p>	
+                             
+                              	<form name="F1" method="POST" action="./ejemplo3">
+                              		<p><label>Cod. Barras: </label> <input type="number" name="codbarras" min="1" max="99999999" step="1" required/><p>
+                              		<p><label>Nombre: </label> <input type="text" name="nombre" required/><p>
+                              		<p><label>Descripción: </label> <input type="text" name="descripcion" required/><p>
+	                              	<p><label>Tipo: </label> <select name="tipo" required>
+																<option th:each="item : ${TiposDePeliculas}" th:value="${item.idTipoArticulo}" th:text="${item.descripcion}"></option>
+															</select>
+									</p>
+                              		<br>
+                              		<div><input type="submit" value="Insertar" /></div>
+                              	</form>          	  
+            </div>
+            <div class="item"><p><span>Ejemplo 4 - Modificación de datos:</span> Al hacer click en este ejemplo se realiza lanza una operación de eliminación de todos los registros de una tabla. Se ejecuta en modo <b>transacción</b>. El método de la capa de conexión utilizado es el mismo que podría ser utilizado para ejecutar operaciones de tipo update.<a href="./ejemplo4">Ver Ejemplo</a></p>			  
+            </div>
+            <div class="item"><p><span>Ejercicio de transaccion propuesto:</span> El ejemplo 4, aunque ejecuta una sola operación (delete), esta, se realiza en modo transacción. Viendo el código disponible en el método <em>deleteAll</em> de la clase <em>ArticuloDao</em> en el paquete (<em>es.dsw.daos</em>):</p> 
+                              <p>¿Serías capaz de crear un 5º ejemplo en el que ofrezcas un formulario para rellenar los datos de un artículo más los datos de un nuevo tipo de artículo y realizar los dos inserts relacionados bajo el control de una transacción?</p>			  
+            </div>
+        </div>
+    </div>
+    <div class="pie"><p><span>©</span> 2023 - Daniel Pérez Pérez</p></div>
+
+</body>
+</html>
