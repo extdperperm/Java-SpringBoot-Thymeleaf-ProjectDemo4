@@ -13,16 +13,29 @@ public class ArticuloDao {
 
 	private boolean flagError;
 	private String msgError;
-
+	private MySqlConnection objConection;
+	private boolean transaccionExterna;
+	
 	public ArticuloDao() {
 		this.flagError = false;
 		this.msgError = "";
+		this.objConection = null;
+		this.transaccionExterna = false;
+	}
+	
+	//Sobrecarga preparada para recibir el objeto desde otro DAO. Se indica si se ha comenzado 
+	//una transacción desde otro DAO, ya que si es así, no se debe cerrar la conexión.
+	public ArticuloDao(MySqlConnection objConx, boolean transac) {
+		this.flagError = false;
+		this.msgError = "";
+		this.objConection = objConx;
+		this.transaccionExterna = transac;
 	}
 	
 	//Método que obtiene todos los artículos. Notar que devuelve un array list de objetos de tipo artículo.
 	public ArrayList<Articulo> getAll(){
 		
-		MySqlConnection objConection = new MySqlConnection();
+		objConection = new MySqlConnection();
 		ArrayList<Articulo> objTablaTipoArticulo = new ArrayList<Articulo>();
 		try {
 			  objConection.open();
@@ -52,6 +65,7 @@ public class ArticuloDao {
 					this.flagError = true;
 					this.msgError = "Error en getAll. +Info: " + ex.getMessage();
 			} finally {
+				if (!this.transaccionExterna)
 					objConection.close();
 			}
 		return objTablaTipoArticulo;
@@ -61,7 +75,7 @@ public class ArticuloDao {
 	//las claves primarias en los atributos del objeto pasado por parámetro.
 	public int setArticulo(Articulo objArticulo){
 		
-		MySqlConnection objConection = new MySqlConnection();
+		objConection = new MySqlConnection();
 		int IdArticulo = -1;
 		try {
 				objConection.open();
@@ -93,7 +107,8 @@ public class ArticuloDao {
 				this.flagError = true;
 				this.msgError = "Error en setArticulo. +Info: " + ex.getMessage();
 	    	} finally {
-				objConection.close();
+	    		if (!this.transaccionExterna)
+	    			objConection.close();
 	    	}
 		
 		objArticulo.setIdarticulo(IdArticulo);
@@ -108,7 +123,7 @@ public class ArticuloDao {
 		//en modo transacción. 
 		//RECUERDA: Si en este código se ejecutara más de una operación, estariamos hablando de
 		//una transacción. Al desactivar el autocomit, debemos controlar esta situación.
-		MySqlConnection objConection = new MySqlConnection(false);
+		objConection = new MySqlConnection(false);
 		try {
 			  objConection.open();
 			  if (!objConection.isError()){
@@ -129,7 +144,8 @@ public class ArticuloDao {
     	    		   //nada si se ejecuta varias veces. Eso sí, la ejecución de un rollback anula TODA la transacción.
     	    		   objConection.rollback();
     	    	   }
-			       objConection.close();
+    	    	   if (!this.transaccionExterna)
+    	    		   objConection.close();
     	    }
 	
 	    return NumRowsDelete;
