@@ -12,16 +12,29 @@ public class TipoArticuloDao {
 
 	private boolean flagError;
 	private String msgError;
+	private MySqlConnection objConection;
+	private boolean transaccionExterna;
 
 	public TipoArticuloDao() {
 		this.flagError = false;
 		this.msgError = "";
+		this.objConection = null;
+		this.transaccionExterna = false;
+	}
+	
+	//Sobrecarga preparada para recibir el objeto desde otro DAO. Se indica si se ha comenzado 
+	//una transacción desde otro DAO, ya que si es así, no se debe cerrar la conexión.
+	public TipoArticuloDao(MySqlConnection objConx, boolean transac) {
+		this.flagError = false;
+		this.msgError = "";
+		this.objConection = objConx;
+		this.transaccionExterna = transac;
 	}
 	
 	//Devuelve un array list de objetos de tipo TipoArticulo. En este caso devuelve todos los registros.
 	public ArrayList<TipoArticulo> getAll(){
 		
-		MySqlConnection objConection = new MySqlConnection();
+		objConection = new MySqlConnection();
 		ArrayList<TipoArticulo> objTablaTipoArticulo = new ArrayList<TipoArticulo>();
 		try {
 			  objConection.open();
@@ -45,6 +58,7 @@ public class TipoArticuloDao {
 					this.flagError = true;
 					this.msgError = "Error en getAll. +Info: " + ex.getMessage();
 			} finally {
+				if (!this.transaccionExterna)
 					objConection.close();
 			}
 		
@@ -56,7 +70,7 @@ public class TipoArticuloDao {
 	//Dado un Id correspondiente a la clave primaria de la tabla TipoArticulo devuelve un objeto con los datos de dicho registro.
 	public TipoArticulo getOnce(int IdTipoArticulo){
 		
-		MySqlConnection objConection = new MySqlConnection();
+		objConection = new MySqlConnection();
 		TipoArticulo objTipoArticulo = null;
 		
 		try {
@@ -80,6 +94,7 @@ public class TipoArticuloDao {
 					this.flagError = true;
 					this.msgError = "Error en getOnce. +Info: " + ex.getMessage();
 			} finally {
+				if (!this.transaccionExterna)
 					objConection.close();
 			}
 		
