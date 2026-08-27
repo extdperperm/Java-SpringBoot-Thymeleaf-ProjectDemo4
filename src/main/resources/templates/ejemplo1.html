@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Spring Boot Project Demo 4 - Jdbc</title>
+
+<!-- Configuración básica datatable -->
+<!-- https://datatables.net/examples/basic_init/zero_configuration.html -->
+<link rel="stylesheet" href="./styles/jquery.dataTables.min.css">
+<script src="./js/jquery-3.5.1.js"></script>
+<script src="./js/jquery.dataTables.min.js"></script>
+<script src="./js/ejemplo1.js"></script>
+<link rel="stylesheet" href="./styles/ejemplo1.css">
+</head>
+<body>
+    <div class="cabecera">
+        <div class="cab1"></div>
+        <div class="cap2"></div>
+    </div>
+    <div class="cuerpo">
+        <div class="panel2">
+            <div class="item"><p><span>Resultado Ejemplo 1:</span></p></div>
+            <div style="margin-left: auto;margin-right: auto;padding-left: 18px; padding-right: 18px;">
+			 <table id="example" class="display" style="width:100%;">
+			        <thead>
+			            <tr>
+			                <th>Id Tipo</th>
+			                <th>Descripcion</th>
+			                <th>F. Inserci&oacute;n</th>
+			                <th>F. Modificaci&oacute;n</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+				            <tr th:each="item : ${TiposDePeliculas}">
+				                <td th:text="${item.idTipoArticulo}"></td>
+				                <td th:text="${item.descripcion}"></td>
+				                <td th:text="${item.getFUltmodf()}"></td>
+				                <td th:text="${item.getFInsercion()}"></td>
+				            </tr>
+			        </tbody>
+			        <tfoot>
+			            <tr>
+			                <th>Id Tipo</th>
+			                <th>Descripcion</th>
+			                <th>F. Inserci&oacute;n</th>
+			                <th>F. Modificaci&oacute;n</th>
+			            </tr>
+			        </tfoot>
+			    </table>
+			  </div>
+            <div class="item"><p style="text-align:center;"><a href="./">Volver</a></p></div>
+        </div>
+    </div> 
+    <div class="pie"><p><span>©</span> 2023 - Daniel Pérez Pérez</p></div>
+
+</body>
+</html>
